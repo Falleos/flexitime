@@ -53,7 +53,7 @@ global $realh_flexitime;
 
 class FlexiTime {
 
-	private $VERSION = "2.0";
+	private $VERSION = "2.0.1";
 
 	/* CONFIG OPTIONS, SET IN flexitime.xml */
 
@@ -221,17 +221,17 @@ class FlexiTime {
 				} else {
 					$this->time_left = $this->time_left + ($this->EMERGENCY_TIME * 60);
 					$this->showPanel();
-					$this->showChatMsg($nickname . " \$fffadded emergency time: " .
+					$this->showChatMsg($nickname . " \$z\$s\$fffadded emergency time: " .
 						$this->getTimeLeftText());
 				}
 			} elseif ($this->authenticateCommand($command)) {
 				if (!strcasecmp($param, "pause")) {
 					$this->paused = true;
-					$this->showChatMsg($nickname . " \$fffpaused the timer.");
+					$this->showChatMsg($nickname . " \$z\$s\$fffpaused the timer.");
 					return;
 				} elseif (!strcasecmp($param, "resume")) {
 					$this->paused = false;
-					$this->showChatMsg($nickname . " \$fffunpaused the timer.");
+					$this->showChatMsg($nickname . " \$z\$s\$fffunpaused the timer.");
 					return;
 				}
 				
@@ -278,7 +278,7 @@ class FlexiTime {
 				{
 					$this->time_left = $tl;
 					$this->showPanel();
-					$this->showChatMsg($nickname . " \$fffchanged time left: " .
+					$this->showChatMsg($nickname . " \$z\$s\$fffchanged time left: " .
 						$this->getTimeLeftText());
 					if ($this->time_left == 0) {
 						$this->nextRound();
@@ -321,7 +321,7 @@ class FlexiTime {
 			mysql_query("UPDATE custom_tracktimes SET tracktime='" . $param .
 				"' WHERE challenge_uid='" . $uid . "';");
 		}
-		$this->showChatMsg($nickname . " set future time for this track to " .
+		$this->showChatMsg($nickname . " \$z\$s\$fffset future time for this track to " .
 			$param . " minutes.");
 	}
 
@@ -506,10 +506,10 @@ class FlexiTime {
 				
 				if (in_array($params[1], $this->WHITELIST)) {
 					$this->showPrivateMsg($login,
-						"\$f00Error: \$fff" . $target . " \$fffis already whitelisted.");
+						"\$f00Error: \$fff" . $target . " \$z\$s\$fffis already whitelisted.");
 				} else {
 					$this->addToWhitelist($params[1]);
-					$this->showChatMsg($nickname . " \$fffadded " . $target . " \$fffto the whitelist");
+					$this->showChatMsg($nickname . " \$z\$s\$fffadded " . $target . " \$z\$s\$fffto the whitelist");
 				}
 			} elseif ($params[0] == 'remove') {
 				if ($params[1] == '') {
@@ -521,10 +521,10 @@ class FlexiTime {
 				
 				if (!in_array($params[1], $this->WHITELIST)) {
 					$this->showPrivateMsg($login,
-						"\$f00Error: \$fff" . $target . " \$fffis not whitelisted.");
+						"\$f00Error: \$fff" . $target . " \$z\$s\$fffis not whitelisted.");
 				} else {
 					$this->removeFromWhitelist($params[1]);
-					$this->showChatMsg($nickname . " \$fffremoved " . $target . " \$ffffrom the whitelist");
+					$this->showChatMsg($nickname . " \$z\$s\$fffremoved " . $target . " \$z\$s\$ffffrom the whitelist");
 				}
 			} else {
 				$this->showPrivateMsg($login, 
