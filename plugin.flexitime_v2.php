@@ -376,12 +376,11 @@ class FlexiTime {
 	}
 
 	private function showChatMsg($msg) {
-		$this->aseco->client->query("ChatSendServerMessage", "> " . $msg);
+		$this->aseco->client->query("ChatSendServerMessage", $this->aseco->formatColors('{#server}>> {#highlite}' . $msg));
 	}
 
 	private function showPrivateMsg($login, $msg) {
-		$this->aseco->client->query("ChatSendServerMessageToLogin",
-			$msg, $login);
+		$this->aseco->client->query("ChatSendServerMessageToLogin", $this->aseco->formatColors('{#server}> {#highlite}' . $msg), $login);
 	}
 
 	private function getTrackInfo() {
