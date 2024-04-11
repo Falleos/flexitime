@@ -53,7 +53,7 @@ global $realh_flexitime;
 
 class FlexiTime {
 
-	private $VERSION = "2.0.1";
+	private $VERSION = "2.0.2";
 
 	/* CONFIG OPTIONS, SET IN flexitime.xml */
 
@@ -217,21 +217,21 @@ class FlexiTime {
 			if ($emergency && in_array($login, $this->WHITELIST)) {
 				if ($this->EMERGENCY_MIN != 0 && $this->time_left > $this->EMERGENCY_MIN * 60) {
 					$this->showPrivateMsg($login,
-						"Emergency time not added: current timer is over {$this->EMERGENCY_MIN} minutes.");
+						"{#error}Emergency time not added: current timer is over {$this->EMERGENCY_MIN} minutes.");
 				} else {
 					$this->time_left = $this->time_left + ($this->EMERGENCY_TIME * 60);
 					$this->showPanel();
-					$this->showChatMsg($nickname . " \$z\$s\$fffadded emergency time: " .
+					$this->showChatMsg($nickname . " \$z\$s{#highlite}added emergency time: " .
 						$this->getTimeLeftText());
 				}
 			} elseif ($this->authenticateCommand($command)) {
 				if (!strcasecmp($param, "pause")) {
 					$this->paused = true;
-					$this->showChatMsg($nickname . " \$z\$s\$fffpaused the timer.");
+					$this->showChatMsg($nickname . " \$z\$s{#highlite}paused the timer.");
 					return;
 				} elseif (!strcasecmp($param, "resume")) {
 					$this->paused = false;
-					$this->showChatMsg($nickname . " \$z\$s\$fffunpaused the timer.");
+					$this->showChatMsg($nickname . " \$z\$s{#highlite}unpaused the timer.");
 					return;
 				}
 				
@@ -249,8 +249,7 @@ class FlexiTime {
 					}
 					$val = intval($val);
 					if (!$val && !($param === "0")) {
-						$this->showPrivateMsg($login,
-							"Invalid parameter to /timeleft.");
+						$this->showPrivateMsg($login, "{#error}Invalid parameter to /timeleft.");
 						return;
 					}
 					$val *= 60;
@@ -267,18 +266,18 @@ class FlexiTime {
 
 				if ($this->MAX_TIME != 0 && $tl > ($this->MAX_TIME * 60)) {
 					$this->showPrivateMsg($login,
-						"Time limit over ".$this->MAX_TIME." minutes is not allowed.");
+						"{#error}Time limit over ".$this->MAX_TIME." minutes is not allowed.");
 					$tl = $this->MAX_TIME * 60;
 				}
 				if ($tl < 0) {
 					$this->showPrivateMsg($login,
-						"Can't set remaining time to less than zero.");
+						"{#error}Can't set remaining time to less than zero.");
 				}
 				else
 				{
 					$this->time_left = $tl;
 					$this->showPanel();
-					$this->showChatMsg($nickname . " \$z\$s\$fffchanged time left: " .
+					$this->showChatMsg($nickname . " \$z\$s{#highlite}changed time left: " .
 						$this->getTimeLeftText());
 					if ($this->time_left == 0) {
 						$this->nextRound();
@@ -295,7 +294,7 @@ class FlexiTime {
 		$nickname = $command["author"]->nickname;
 		if (!$this->CUSTOM_TIME) {
 			$this->showPrivateMsg($login,
-				"/timeset command not enabled in plugin config.");
+				"{#error}/timeset command not enabled in plugin config.");
 			return;
 		}
 		if (!$this->authenticateCommand($command)) {
@@ -304,7 +303,7 @@ class FlexiTime {
 		$param = intval(trim($command["params"]));
 		if (!$param) {
 			$this->showPrivateMsg($login,
-				"Usage (where 120 is number of minutes): /timeset 120");
+				"{#error}Usage (where 120 is number of minutes): /timeset 120");
 			return;
 		}
 		$challenge = $this->getTrackInfo();
@@ -321,7 +320,7 @@ class FlexiTime {
 			mysql_query("UPDATE custom_tracktimes SET tracktime='" . $param .
 				"' WHERE challenge_uid='" . $uid . "';");
 		}
-		$this->showChatMsg($nickname . " \$z\$s\$fffset future time for this track to " .
+		$this->showChatMsg($nickname . " \$z\$s{#highlite}set future time for this track to " .
 			$param . " minutes.");
 	}
 
@@ -354,7 +353,7 @@ class FlexiTime {
 			return true;
 		} else {
 			$this->showPrivateMsg($login,
-				"\$f00\$iYou do not have permission to change the remaining time.");
+				"{#error}You do not have permission to change the remaining time.");
 		}
 		return false;
 	}
@@ -485,8 +484,7 @@ class FlexiTime {
 		
 		if (!($this->aseco->isMasterAdmin($player) && $this->WHITELIST_ADMIN_LEVEL >= 1) &&
 			!($this->aseco->isAdmin($player) && $this->WHITELIST_ADMIN_LEVEL == 2)) {
-			$this->showPrivateMsg($login,
-				"\$f00\$iYou do not have permission to use /whitelist command.");
+			$this->showPrivateMsg($login, "{#error}You do not have permission to use /whitelist command.");
 		} else {
 			if ($params[0] == '') {
 				$this->showWhitelistManialink($player);
@@ -494,10 +492,10 @@ class FlexiTime {
 				$this->showHelpManialink($login);
 			} elseif ($params[0] == 'reload') {
 				$this->reloadWhitelist();
-				$this->showPrivateMsg($login, "Whitelist successfully reloaded.");
+				$this->showPrivateMsg($login, "\$iWhitelist successfully reloaded.");
 			} elseif ($params[0] == 'add') {
 				if ($params[1] == '') {
-					$this->showPrivateMsg($login, "\$f00Error: \$fffLogin is not specified.");
+					$this->showPrivateMsg($login, "{#error}Login is not specified.");
 					return;
 				}
 				
@@ -505,14 +503,14 @@ class FlexiTime {
 				
 				if (in_array($params[1], $this->WHITELIST)) {
 					$this->showPrivateMsg($login,
-						"\$f00Error: \$fff" . $target . " \$z\$s\$fffis already whitelisted.");
+						"{#highlite}" . $target . " \$z\$s{#error}is already whitelisted.");
 				} else {
 					$this->addToWhitelist($params[1]);
-					$this->showChatMsg($nickname . " \$z\$s\$fffadded " . $target . " \$z\$s\$fffto the whitelist");
+					$this->showChatMsg($nickname . " \$z\$s{#highlite}added " . $target . " \$z\$s{#highlite}to the whitelist");
 				}
 			} elseif ($params[0] == 'remove') {
 				if ($params[1] == '') {
-					$this->showPrivateMsg($login, "\$f00Error: \$fffLogin is not specified.");
+					$this->showPrivateMsg($login, "{#error}Login is not specified.");
 					return;
 				}
 				
@@ -520,14 +518,14 @@ class FlexiTime {
 				
 				if (!in_array($params[1], $this->WHITELIST)) {
 					$this->showPrivateMsg($login,
-						"\$f00Error: \$fff" . $target . " \$z\$s\$fffis not whitelisted.");
+						"{#highlite}" . $target . " \$z\$s{#error}is not whitelisted.");
 				} else {
 					$this->removeFromWhitelist($params[1]);
-					$this->showChatMsg($nickname . " \$z\$s\$fffremoved " . $target . " \$z\$s\$ffffrom the whitelist");
+					$this->showChatMsg($nickname . " \$z\$s{#highlite}removed " . $target . " \$z\$s{#highlite}from the whitelist");
 				}
 			} else {
 				$this->showPrivateMsg($login, 
-					"\$f00Error: \$fffUnknown parameter. Use \$0bf/whitelist help \$ffffor more information.");
+					"{#error}Unknown parameter. Use {#highlite}/whitelist help \$i{#error}for more information.");
 			}
 		}
 	}
@@ -543,8 +541,7 @@ class FlexiTime {
 		} else {
 			$target = $login;
 			if ($showMsg) {
-				$this->showPrivateMsg($player->login, 
-					"\$f00Warning: \$fffLogin not found in the database.");
+				$this->showPrivateMsg($player->login, "{#error}Login not found in the database.");
 			}
 		}
 		mysql_free_result($result);
