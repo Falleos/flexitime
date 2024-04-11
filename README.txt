@@ -39,6 +39,11 @@ This update is built around the idea of a whitelist. Some players are active eno
 
 (*) Nickname will now be displayed instead of login in all messages.
 
+(*) Fixed prefixes
+	Public messages are now displayed with the ">>" prefix, as they should, and private messages are displayed with the ">" prefix.
+
+(*) Slightly improved formatting of messages.
+
 (**) Added the ability to remove the upper time limit.
 (**) /timeleft +<value>, /timeleft -<value>, "max_timeleft"
 	At the time of my changes and writing this text, the plugin repository on the XAseco website contains the old version of this plugin (1.3.3), so the first 2 commands may not work correctly for you, and the upper time limit may be absent altogether. The current version (also listed as 1.3.3, although it is actually 1.4) is available on the author's GitHub (https://github.com/realh/flexitime). If you are not satisfied with my fork and have the old version installed, I recommend updating to the author's latest version.
